@@ -5,7 +5,6 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from pokemon_entities.models import Pokemon, PokemonEntity
 
-
 MOSCOW_CENTER = [55.751244, 37.618423]
 DEFAULT_IMAGE_URL = "https://vignette.wikia.nocookie.net/pokemon/images/6/6e/%21.png/revision/latest/fixed-aspect-ratio-down/width/240/height/240?cb=20130525215832&fill=transparent"
 
@@ -54,5 +53,13 @@ def show_pokemon(request, pokemon_id):
         'title_jp': pokemon.pokemon.title_jp,
         'description': pokemon.pokemon.description
     }
+
+    if pokemon.pokemon.previous_evolution:
+        pokemon_on_page['previous_evolution'] = {
+            'title_ru': pokemon.pokemon.previous_evolution.title_ru,
+            'pokemon_id': pokemon.pokemon.previous_evolution.id,
+            'img_url': request.build_absolute_uri(pokemon.pokemon.previous_evolution.image.url)
+        }
+
     return render(request, "pokemon.html", context={'map': folium_map._repr_html_(),
                                                     'pokemon': pokemon_on_page})
