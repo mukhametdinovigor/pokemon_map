@@ -58,12 +58,15 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': pokemon.pokemon.previous_evolution.id,
             'img_url': request.build_absolute_uri(pokemon.pokemon.previous_evolution.image.url)
         }
-    if pokemon.pokemon.next_evolution.all()[0]:
-        pokemon_on_page['next_evolution'] = {
-            'title_ru': pokemon.pokemon.next_evolution.all()[0].title_ru,
-            'pokemon_id': pokemon.pokemon.next_evolution.all()[0].id,
-            'img_url': request.build_absolute_uri(pokemon.pokemon.next_evolution.all()[0].image.url)
-        }
+    try:
+        if pokemon.pokemon.next_evolution.all()[0]:
+            pokemon_on_page['next_evolution'] = {
+                'title_ru': pokemon.pokemon.next_evolution.all()[0].title_ru,
+                'pokemon_id': pokemon.pokemon.next_evolution.all()[0].id,
+                'img_url': request.build_absolute_uri(pokemon.pokemon.next_evolution.all()[0].image.url)
+            }
+    except IndexError:
+        pass
 
 
     return render(request, "pokemon.html", context={'map': folium_map._repr_html_(),
