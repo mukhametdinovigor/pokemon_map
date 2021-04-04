@@ -1,7 +1,5 @@
 import folium
-import json
 
-from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from pokemon_entities.models import Pokemon, PokemonEntity
 
@@ -60,6 +58,13 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': pokemon.pokemon.previous_evolution.id,
             'img_url': request.build_absolute_uri(pokemon.pokemon.previous_evolution.image.url)
         }
+    if pokemon.pokemon.next_evolution.all()[0]:
+        pokemon_on_page['next_evolution'] = {
+            'title_ru': pokemon.pokemon.next_evolution.all()[0].title_ru,
+            'pokemon_id': pokemon.pokemon.next_evolution.all()[0].id,
+            'img_url': request.build_absolute_uri(pokemon.pokemon.next_evolution.all()[0].image.url)
+        }
+
 
     return render(request, "pokemon.html", context={'map': folium_map._repr_html_(),
                                                     'pokemon': pokemon_on_page})
